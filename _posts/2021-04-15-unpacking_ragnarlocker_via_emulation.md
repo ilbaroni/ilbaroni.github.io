@@ -24,55 +24,55 @@ There is no need to understand all the details of the algorithms used by this pa
 
 Instead, I need to understand the flow of the unpacking routines and try to identify a stage where the payload is unpacked in memory so that I could dump it.
 
-### First stage
+**First stage**
 
 In this first stage, the packer executes several worthless instructions, functions, and loops to slow down the analysis. It also uses some anti-emulation techniques, possibly to avoid being executed by emulators like Qiling. Below it's possible to see some examples.
 
-**Worthless function:**
+Worthless function:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415105305206.png)
 
-**Worthless loop and instructions:**
+Worthless loop and instructions:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415105556495.png)
 
-**Giant loop to slow down the execution (this is costly to an emulator, specially written in python):**
+Giant loop to slow down the execution (this is costly to an emulator, specially written in python):
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415104926358.png)
 
-**Anti emulating via GetLastError API:**
+Anti emulating via GetLastError API:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415110306334.png)
 
-Another anti-emulation method used, was the usage of **GetLastError** Windows API, which is used to check the last error code of the calling thread.
+Another anti-emulation method used, was the usage of GetLastError() Windows API, which is used to check the last error code of the calling thread.
 
-The packer calls **SetWindowContextHelpId** with an invalid handle and checks if the last error equals **ERROR_INVALID_WINDOW_HANDLE** that corresponds to the value **0x578**.
+The packer calls SetWindowContextHelpId() with an invalid handle and checks if the last error equals ERROR_INVALID_WINDOW_HANDLE that corresponds to the value 0x578.
 
-### Second stage
+**Second stage**
 
 In this stage, the packer simply allocates a new memory region, decrypts a shellcode, copies the shellcode to the newly allocated memory, and transfers execution to it.
 
-**Allocating a new memory region:**
+Allocating a new memory region:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415111539604.png)
 
-**Decrypting the shellcode:**
+Decrypting the shellcode:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415111627124.png)
 
-**Transferring execution to the shellcode:**
+Transferring execution to the shellcode:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415111727379.png)
 
-As seen, a handle to **KERNEL32.dll** is passed to the shellcode. 
+As seen, a handle to KERNEL32.dll is passed to the shellcode. 
 
 This handle is later used to resolve the needed APIs.
 
-### Third stage - final shellcode
+**Third stage - final shellcode**
 
 In this last stage, the shellcode decrypts the payload and loads it using a self replacement technique.
 
-**Resolving the needed APIs:**
+Resolving the needed APIs:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415113116136.png)
 
@@ -89,21 +89,21 @@ VirtualQuery
 TerminateThread
 ```
 
-**Allocating two memory regions:**
+Allocating two memory regions:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415122917463.png)
 
-**Copying the encrypted payload to the first memory region and decrypting it:**
+Copying the encrypted payload to the first memory region and decrypting it:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415123052129.png)
 
-**Copying the decrypted payload from the first memory region to the second memory region, and calling VirtualFree:**
+Copying the decrypted payload from the first memory region to the second memory region, and calling VirtualFree:
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415123258348.png)
 
-The perfect time to dump the unpacked RAGNARLOCKER payload is when the shellcode calls **VirtualFree**.
+The perfect time to dump the unpacked RAGNARLOCKER payload is when the shellcode calls VirtualFree().
 
-As seen below, at the moment the shellcode calls **VirtualFree** the second memory region allocated by the shellcode contains a PE file (the unpacked payload).
+As seen below, at the moment the shellcode calls VirtualFree() the second memory region allocated by the shellcode contains a PE file (the unpacked payload).
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415174103413.png)
 
@@ -111,14 +111,14 @@ Based on the analysis of the packer the strategy to unpack the payload with Qili
 
 | Strategy to unpack                                           |
 | ------------------------------------------------------------ |
-| Track all the memory regions that are allocated. To do that I used hooks in VirtualAlloc and  VirtualAllocEx. |
-| When VirtualFree is called, dump the last allocated memory region. |
+| Track all the memory regions that are allocated. To do that I used hooks in VirtualAlloc() and  VirtualAllocEx(). |
+| When VirtualFree() is called, dump the last allocated memory region. |
 
 This seems simple enough, but I also needed to overcome the anti-emulation tricks and Qiling limitations:
 
 | Strategy to overcome Anti-Emulation tricks and Qiling limitations |
 | ------------------------------------------------------------ |
-| Bypass GetLastError anti-emulation trick.                    |
+| Bypass GetLastError() anti-emulation trick.                  |
 | Patch the large anti-emulation loop.                         |
 | Implement any missing windows apis. (Qiling limitation)      |
 
@@ -132,9 +132,9 @@ Description from the official website:
 
 The advantage of using a framework like this to unpack malware is that the need to fully understand the unpacking algorithm is eliminated. Also, the unpacker script may survive updates in the algorithm of the packer.
 
-### Bypass GetLastError anti-emulation trick
+**Bypass GetLastError() anti-emulation trick**
 
-As seen before, this packer uses the **GetLastError** to check if the last error code was **0x578** after calling **SetWindowContextHelpId**.
+As seen before, this packer uses the GetLastError() to check if the last error code was 0x578 after calling SetWindowContextHelpId().
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415110306334.png)
 
@@ -148,7 +148,7 @@ def hook_SetWindowContextHelpId(ql, address, params):
     return False
 ```
 
-Additionally, **GetWindowContextHelpId** seems to be called with the **SetWindowContextHelpId**. Since this API is not implemented in Qiling I needed to implement it and make it set the correct error code. 
+Additionally, GetWindowContextHelpId() seems to be called with the SetWindowContextHelpId() call. Since this API is also not implemented in Qiling I needed to implement it and make it set the correct error code. 
 
 ```python
 @winsdkapi(cc=STDCALL, dllname="user32_dll") 
@@ -158,7 +158,7 @@ def hook_GetWindowContextHelpId(ql, address, params):
     return False
 ```
 
-### Patching the large anti-emulation loop
+**Patching the large anti-emulation loop**
 
 As seen before, the packer uses a large "for" loop possibly to avoid being executed under emulators like Qiling.
 
@@ -174,7 +174,7 @@ The idea was to change it to `cmp     [ebp+var_1B8], 0`.
 
 This way the code does not enter the "for" loop.
 
-(**Note:** Another approach could be to turn the conditional jump that comes after in an unconditional jump)
+> **Note:** Another approach could be to turn the conditional jump that comes after in an unconditional jump)
 
 Patch function:
 
@@ -202,7 +202,7 @@ def patch_bytes(ql):
             ql.log.warning('target patch bytes not found')
 ```
 
-### Overcoming Qiling limitations
+**Overcoming Qiling limitations**
 
 Some Windows APIs are not yet implemented in Qiling, thus I needed to implement them. 
 
@@ -240,7 +240,7 @@ def hook_VirtualQuery(ql, address, params):
     return params['dwLength']
 ```
 
-### Defining the needed hooks
+**Defining the needed hooks**
 
 With the anti-emulation loop patched and the Qiling limitations been taken care of, it was a matter of hooking the rest of the needed functions to keep up with the unpacking strategy.
 
@@ -291,8 +291,8 @@ def hook_VirtualAlloc(ql, address, params):
 
 Things to notice in the above definitions:
 
-- Both the **VirtualAlloc** and **VirtualAllocEx** hooks save the memory regions being allocated to a global variable.
-- The **VirtualFree** hook calls a function to dump the last memory region that was saved in the global variable. 
+- Both the VirtualAlloc() and VirtualAllocEx() hooks save the memory regions being allocated to a global variable.
+- The VirtualFree() hook calls a function to dump the last memory region that was saved in the global variable. 
 
 The function that dumps the memory region:
 
@@ -326,21 +326,15 @@ The file that was unpacked should open with no problems in a PE viewer like [PE-
 
 I can see the potential in using a framework like Qiling to automate certain tasks in reverse engineering, and I'll keep exploring emulation and other use cases for this great framework.
 
-
-
-**Full Script:**
-
 You can find the full script in [**this gist**](https://gist.github.com/jnzer0/3114db9dfc84c62b1ba752e465ea8c15).
 
-
-
-**Sample used in this proof of concept:**
+Sample used in this proof of concept:
 
 ```
 68eb2d2d7866775d6bf106a914281491d23769a9eda88fc078328150b8432bb3
 ```
 
-**References:**
+# References
 
 - [Automated malware unpacking with binary emulation](https://lopqto.me/posts/automated-malware-unpacking)
 - [Using Qiling Framework to Unpack TA505 packed samples](https://www.blueliv.com/cyber-security-and-cyber-threat-intelligence-blog-blueliv/using-qiling-framework-to-unpack-ta505-packed-samples/)
