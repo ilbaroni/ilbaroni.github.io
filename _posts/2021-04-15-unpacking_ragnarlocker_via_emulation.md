@@ -4,7 +4,8 @@ title:  "Unpacking RAGNARLOCKER via emulation"
 date:   2021-04-15
 categories: reversing
 ---
-# Introduction
+
+## Introduction
 
 Packers are a common way for adversaries to protect their payloads, avoid detections and make reverse engineering a bit harder. There are several types of packers, some use anti-analysis techniques and others are a bit more simple to reverse engineer.
 
@@ -16,7 +17,7 @@ Recently I've started to read more about emulation and came across the [Qiling f
 
 Here I'll try to explain my approach to unpack RAGNARLOCKER with Qiling.
 
-# Reverse engineering the packer
+## Reverse engineering the packer
 
 To extract the payload via emulation, I needed to understand a bit of how the 3 stages of this packer work. 
 
@@ -122,7 +123,7 @@ This seems simple enough, but I also needed to overcome the anti-emulation trick
 | Patch the large anti-emulation loop.                         |
 | Implement any missing windows apis. (Qiling limitation)      |
 
-# Qiling Emulation Framework
+## Qiling Emulation Framework
 
 Qiling is a high-level framework that tries to emulate both the CPU and the OS. To unpack malware samples, we just have to be aware of the anti-emulation tricks (that are often used by packers) and implement any missing APIs.
 
@@ -308,7 +309,7 @@ def dump_memory_region(ql, address, size):
         ql.log.error(str(e))
 ```
 
-# Unpacking RAGNARLOCKER
+## Unpacking RAGNARLOCKER
 
 Script output:
 
@@ -322,7 +323,7 @@ The file that was unpacked should open with no problems in a PE viewer like [PE-
 
 ![ ](/assets/images/unpacking_ragnarlocker_via_emulation/image-20210415153657912.png)
 
-# Conclusion
+## Conclusion
 
 I can see the potential in using a framework like Qiling to automate certain tasks in reverse engineering, and I'll keep exploring emulation and other use cases for this great framework.
 
@@ -334,7 +335,7 @@ Sample used in this proof of concept:
 68eb2d2d7866775d6bf106a914281491d23769a9eda88fc078328150b8432bb3
 ```
 
-# References
+## References
 
 - [Automated malware unpacking with binary emulation](https://lopqto.me/posts/automated-malware-unpacking)
 - [Using Qiling Framework to Unpack TA505 packed samples](https://www.blueliv.com/cyber-security-and-cyber-threat-intelligence-blog-blueliv/using-qiling-framework-to-unpack-ta505-packed-samples/)

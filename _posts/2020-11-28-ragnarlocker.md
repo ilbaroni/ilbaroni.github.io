@@ -5,6 +5,10 @@ date:   2020-11-28
 categories: reversing
 ---
 
+## Introduction
+
+In this blogpost I'll go through a RAGNARLOCKER sample and check how it works.
+
 ## Checking Operating System Language
 
 Ragnar starts by the checking the language of the operating system and if it matches any of the following blacklisted languages it will terminate the process:
@@ -159,10 +163,9 @@ This sample of Ragnar Locker was first seen on VirusTotal on July 2020 as seen b
 
 ![image-20201127112344952](/assets/images/ragnarlocker/image-20201127112344952.png)
 
-SHA256:
-
+File:
 ```
-04C9CC0D1577D5EE54A4E2D4DD12F17011D13703CDD0E6EFD46718D14FD9AA87
+SHA256: 04C9CC0D1577D5EE54A4E2D4DD12F17011D13703CDD0E6EFD46718D14FD9AA87
 ```
 
 As seen on the ransomnote this payload was targeting CWT company which is a travel agency. Since no data of this company was leaked by the Ragnar Locker gang it looks that this company actually paid the ransom which was $4.5M.

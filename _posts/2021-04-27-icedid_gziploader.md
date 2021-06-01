@@ -5,7 +5,7 @@ date:   2021-04-27
 categories: reversing
 ---
 
-# About ICEDID
+## About ICEDID
 
 ICEDID is one of the most sophisticated malware families currently out there. It is a banking trojan that steals banking data and even personal information from the victims. 
 
@@ -13,7 +13,7 @@ One of the interesting aspects of ICEDID is that it uses in-memory payloads, onl
 
 The old loader was called PHOTOLOADER, but as discovered by the Binary Defence threat intelligence team, there is a new ICEDID loader that has been delivered by a QAKBOT affiliate using malicious EXCEL documents.
 
-**Example of the malicious EXCEL doc:**
+Example of the malicious EXCEL doc:
 
 ![ ](/assets/images/icedid_gziploader/image-20210427085533856.png)
 
@@ -29,15 +29,15 @@ Below the process tree of a recent ICEDID infection starting with the malicious 
 
 ![ ](/assets/images/icedid_gziploader/image-20210427085616203.png)
 
-**Detection opportunity:**
+Detection opportunity:
 
 Watch for "rundll32.exe" and "regsvr32.exe" processes being executed under office programs such as "winword.exe" and "excel.exe".
 
-# GZIPLOADER Stage 1
+## GZIPLOADER Stage 1
 
 This first loader is responsible for doing host reconnaissance and downloads the next stage from a remote C2 server that looks like a GZIP file, hence the name GZIPLOADER.
 
-## Technical details
+### Technical details
 
 The first step of the loader is to decrypt its config and make an HTTPS GET request to a legit domain (aws.amazon.com, in this case):
 
@@ -51,7 +51,7 @@ Looking at the HTTP response from the C2 it looks like a GZIP file because of th
 
 Rather than a legit GZIP file, it's encrypted data containing another loader and the encrypted main ICEDID bot.
 
-**HTTP GET and response masqueraded as a GZIP file:**
+HTTP GET and response masqueraded as a GZIP file:
 
 ![ ](/assets/images/icedid_gziploader/image-20210427091907226.png)
 
@@ -85,11 +85,11 @@ Example of the command line arguments used to launch the second loader:
 
  ![ ](/assets/images/icedid_gziploader/image-20210427115239680.png)
 
-**Detection opportunity:** 
+Detection opportunity: 
 
 Watch for the creation of files named "license.dat" within the Appdata\Roaming directory, and "rundll32.exe" processes using that file as part of the command line arguments.
 
-# GZIPLOADER Stage 2 - Main Loader
+## GZIPLOADER Stage 2 - Main Loader
 
 This second stage loader is a big executable that will decrypt the main ICEDID bot (license.dat file) and load it to memory for execution.
 
@@ -108,9 +108,9 @@ Size: 604
 
 For more information about the GZIP algorithm used by ICEDID, check the Binary Defence Analysis blog post in the references section.
 
-# Indicators
+## Indicators
 
-**File hashes:**
+File hashes:
 
 | SHA1                                     | Description                 |
 | ---------------------------------------- | --------------------------- |
@@ -119,7 +119,7 @@ For more information about the GZIP algorithm used by ICEDID, check the Binary D
 | 52286ca71ac4239c5e2faad25e569f83ca4b35ee | stage 2 loader              |
 | 0febc376cc066bb668f1a80b969ed112da8e871c | license.dat                 |
 
-**URLs:**
+URLs:
 
 ```
 hxxp://rlvq27rmjej02sfvb.com/fedara.gif
@@ -127,7 +127,7 @@ hxxp://berxion9.online/
 hxxps://timerework.fun/users/1820688957/3327032839
 ```
 
-**ICEDID C2 servers:**
+ICEDID C2 servers:
 
 ```
 berxion9.online
@@ -135,9 +135,9 @@ timerework.fun
 pexxota.space
 ```
 
-# References
+## References
 
-* [**IcedID GZIPLOADER Analysis - Binary Defence**](https://www.binarydefense.com/icedid-gziploader-analysis/)
-* **[IcedID Decryption Tool - Binary Defence](https://github.com/BinaryDefense/IcedDecrypt)**
-* [**IcedID PhotoLoader evolution - @sysopfb**](https://sysopfb.github.io/malware,/icedid/2020/04/28/IcedIDs-updated-photoloader.html)
+* [IcedID GZIPLOADER Analysis - Binary Defence](https://www.binarydefense.com/icedid-gziploader-analysis/)
+* [IcedID Decryption Tool - Binary Defence](https://github.com/BinaryDefense/IcedDecrypt)
+* [IcedID PhotoLoader evolution - @sysopfb](https://sysopfb.github.io/malware,/icedid/2020/04/28/IcedIDs-updated-photoloader.html)
 

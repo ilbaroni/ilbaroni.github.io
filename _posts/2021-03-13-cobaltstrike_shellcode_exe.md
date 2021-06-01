@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "Extracting the beacon from cobaltstrike_shellcode.exe files"
+title:  "Let's extract beacons from cobaltstrike_shellcode.exe files"
 date:   2021-03-13
 categories: reversing
 ---
 
-# Introduction
+## Introduction
 
 In this blog post, I will show what was my approach to statically extract indicators from these `cobaltstrike_shellcode.exe` executables.
 
@@ -13,11 +13,11 @@ As seen below, there are a lot of these executables in VirusTotal.
 
 ![](/images/cobaltstrike_shellcode_exe/vt.png)
 
-# Reversing engineering the executable
+## Reversing engineering the executable
 
 The behavior of these files is very simple to understand as they just decrypt a large blob of data (which is the cobalt strike beacon) and transfer execution to it.
 
-These executables start with the popular **jmp/call/pop** technique to start executing the decryption stub.
+These executables start with the popular jmp/call/pop technique to start executing the decryption stub.
 
 ![ ](/images/cobaltstrike_shellcode_exe/jmp_call_pop.png)
 
@@ -53,13 +53,13 @@ Now let's try to parse the beacon config with the [Sentinel One extractor](https
 
 As seen, it worked!
 
-**Note:** Sometimes the beacons may have the "MZ" magic bytes stripped but that will be ok as long as the Yara rule keeps matching on the shellcode.
+> **Note:** Sometimes the beacons may have the "MZ" magic bytes stripped but that will be ok as long as the Yara rule keeps matching on the shellcode.
 
 ![ ](/images/cobaltstrike_shellcode_exe/no_mz.png)
 
 Now with a working script to decrypt the beacon and a working beacon config extractor, I can combine them to extract indicators automatically.
 
-That's it.
+That's it. The full script can be found in [this gist](https://gist.github.com/jnzer0/54a7a153d49b4e9b9e31ecc654f9b80d).
 
-**Full script** can be found in [**this gist**](https://gist.github.com/jnzer0/54a7a153d49b4e9b9e31ecc654f9b80d)
+Cheers!
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Windows Component Object Model"
+title:  "Windows Component Object Model - Some thoughts"
 date:   2021-01-16
 categories: reversing
 ---
@@ -9,7 +9,7 @@ Windows COM is an interesting area to explore and I decided to put this blog pos
 
 In the first section I try to explain briefly what is COM, in the second section I show an example of a malware sample that uses a COM object to connect to an URL, the third section is about a technique known as COM hijacking and the final section is about using DCOM (Distributed Component Object Model) to achieve remote code execution.
 
-# COM
+## COM
 
 COM refers to "Component Object Model" and it is a mechanism used by the Windows operating system to allow different applications to use the components of each other without knowing their internals. This way, two different applications, written in two different languages are able to communicate with each other.
 
@@ -19,7 +19,7 @@ COM defines interfaces and applications that want to expose some of their functi
 
 Each object exposes functionality by implementing one or more interfaces, which are defined via IIDs (Interface IDs) that are also GUIDs.
 
-The classes are defined in the registry under the **HKEY_CLASSES_ROOT\CLSID** and the interfaces are under **HKEY_CLASSES_ROOT\Interface**.
+The classes are defined in the registry under the HKEY_CLASSES_ROOT\CLSID and the interfaces are under HKEY_CLASSES_ROOT\Interface.
 
 Classes:
 
@@ -58,7 +58,7 @@ The value ThreadingModel can contain the following data:
 | Both      | Single or Multi Thread |
 | Neutral   | Thread Neutral         |
 
-# Malware using COM
+## Malware using COM
 
 It is common to find malware that uses COM objects to somehow masquerade their true intentions and make analysis harder.
 
@@ -90,7 +90,7 @@ If you check the MSDN documentation for the [IWebBrowser2](https://docs.microsof
 
 As seen, in this example the Navigate function allows the malware to use Internet Explorer to access an URL.
 
-# COM Hijacking
+## COM Hijacking
 
 When it comes to abuse COM, there is a technique known as COM Hijacking. The goal of this method is to replace the path inside the registry entry so that it points to a different DLL, one that is controlled by yourself. This can be used for purposes such as persistence and even privilege escalation.
 
@@ -103,11 +103,11 @@ One thing that is important to know in order to understand this technique is tha
 | Machine wide COM objects | HKLM\SOFTWARE\CLASSES\CLSID |
 | User COM objects         | HKCU\SOFTWARE\CLASSES\CLSID |
 
-These to locations are then merged and build the already known location: **HKEY_CLASSES_ROOT\CLSID**.
+These to locations are then merged and build the already known location: HKEY_CLASSES_ROOT\CLSID.
 
-Why does this matter? Well, a regular user **can define** COM objects on the HKCU and even **duplicate** the ones in HKLM. This is interesting because when it comes to execution the HKCU definitions **take precedence** over HKLM, thus giving the opportunity to hijack what will be executed.
+Why does this matter? Well, a regular user can define COM objects on the HKCU and even duplicate the ones in HKLM. This is interesting because when it comes to execution the HKCU definitions take precedence over HKLM, thus giving the opportunity to hijack what will be executed.
 
-Like I mentioned before, COM hijacking is dangerous as it can break functionality of applications... So a common practice is to look for applications trying to access COM objects that **don't exist** and hijack those.
+Like I mentioned before, COM hijacking is dangerous as it can break functionality of applications... So a common practice is to look for applications trying to access COM objects that don't exist and hijack those.
 
 ![notfound](/assets/images/windows_com/notfound.png)
 
@@ -133,7 +133,7 @@ After some random time, the following message box appears:
 
 This means that the previously inexistent COM object was successfully hijacked with my custom DLL.
 
-# DCOM - Remote Code Execution
+## DCOM - Remote Code Execution
 
 DCOM refers to "Distributed Component Object Model" which extends Microsoft's COM and allows the communication between software components over a network through COM.
 
@@ -147,9 +147,9 @@ You should see something like this:
 
 ![dcomapps](/assets/images/windows_com/dcomapps.png)
 
-In this example I use the MMC Application Class (MMC20.Application) since it provides a way of executing remote commands on a computer. (Note: The usage of the MMC Application Class for remote execution was not discovered by myself. In [**this**](https://enigma0x3.net/2017/01/05/lateral-movement-using-the-mmc20-application-com-object/) blogpost you can find the research of enigma0x3 about this topic.)
+In this example I use the MMC Application Class (MMC20.Application) since it provides a way of executing remote commands on a computer. (Note: The usage of the MMC Application Class for remote execution was not discovered by myself. In [this](https://enigma0x3.net/2017/01/05/lateral-movement-using-the-mmc20-application-com-object/) blogpost you can find the research of enigma0x3 about this topic.)
 
-If you open an instance of the MMC Application Class object and search for the methods under Document.ActiveView you will see a method named [**ExecuteShellCommand**](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/mmc/view-executeshellcommand?redirectedfrom=MSDN):
+If you open an instance of the MMC Application Class object and search for the methods under Document.ActiveView you will see a method named [ExecuteShellCommand](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/mmc/view-executeshellcommand?redirectedfrom=MSDN):
 
 ![mmc](/assets/images/windows_com/mmc.png)
 

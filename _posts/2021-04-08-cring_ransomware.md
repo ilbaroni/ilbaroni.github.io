@@ -4,7 +4,8 @@ title:  "CRING ransomware"
 date:   2021-04-08
 categories: reversing
 ---
-# About the ransomware
+
+## Introduction
 
 As pointed out by [Kaspersky](https://usa.kaspersky.com/about/press-releases/2021_na-cring-ransomware-infects-industrial-targets-through-vulnerability-in-vpn-servers), CRING is a human-operated ransomware that is connected with a series of attacks that targeted European industrial companies. These attacks were noticed by the [Swisscom CSIRT](https://twitter.com/swisscom_csirt/status/1354052879158571008?s=20) team in early 2021, but until now it was unclear how the attackers breached the companies to ultimately deploy the ransomware.
 
@@ -22,9 +23,9 @@ The tweet made by Swisscom CSIRT also shows some of the TTPs used by the attacke
 
 ![ ](/assets/images/cring_ransomware/image-tweet.png)
 
-# Ransomware Analysis
+## Ransomware Analysis
 
-File hash: **d8415a528df5eefcb3ed6f1a79746f40**
+File hash: d8415a528df5eefcb3ed6f1a79746f40
 
 As seen below, there some non-standard section names, and also all sections are writable and executable. This means that the ransomware is packed.
 
@@ -77,7 +78,7 @@ RSA pub key:
 <RSAKeyValue><Modulus>rWCKSB0ToYXx616kU5cMP9CsgdkWgOW+ZLtcCcDcI5U2QIolO/Bv7M2hV8BBNT0w3MMCL9rVAFfb5raQGDP8iHgG4bmwtxof9R1kALGkmxRKkjWhGgORSeH47G0QvbtPCqZjaOZ5SS11DkhG1qU7+UrbDiVpOVtxpl/+qs4p5Yr4co+Xz1Ad/a/mK2qIYi+BWJEZjP/ocrwkjG5F9ImwuhHP6o5bsowQ7dAaaa9lKhf4cCp+UQfXOzYH5xI2lNuxZdfKMNCCGwY5TEP0Scq34VIPJ8YeerL1JGaz6c3XqHxTnNv8HvPCLULf2zpJ04bz29af/KoapLUdGD+QLtu9o6DXjcDryB9cPVjx2bLSwicF1Z04o4rxiSiCiAmmvk/GVxJXtIACk9bqJFKvjQHD5dOgGkvKCFKBAJRHvo18vsq4RpDDPDD0Edd6X+TG3eFWk5mfKFFmb8KABmEjtG/OkjSUCXLjA5QbE2MBuLeJSDr31ShTPJu5O6/TjtJbHiynE63nawvenkSBC2LNeRkibBnHIV9DKFYXZXQdaP8COms8prE8UC2eXCjEUX+X+gY7cTMLktg3Nd0tayivcpCxz9LdB4w268DUfUTD+RD30foDemlE/BbTjlL0VcAEXZXmjmNvWMp26NOZIed7Ze2Z9fQr5n6wcgELYerkAo6jCkFF7R8iji9I433RG8YnerVy+L5HspQRWQ2MUYqcK8W0PlQ9wX28GZ6jv+dkU/3J23zfzg5jU4Rf1Z56a09lklXxJzKkimq7aLsnjs0VUDI12EUK/vZbSlQssAhQa1mKypo44RnXIitaK51twUXBfmwlSD7T6VI6lMUvkvYoQeQa839fgIcI5y23mMbhZc5pfB8UsHshG+eHXGUopx4l2MUlO9OTKJqJZgMYizq1BBe/uUprM6TXPNUj2STcPv4SbrrSaYe/21P8L92S+Tue26anfUQk8KmbwZte4bw9JCl3K3ke71bAN+6MgnrvOadCsASLxEwCUmBpj1JekZoJijOX00RQO8DwpWp3JxSgI8FBj28oucMuAm+wHENzUJ3BY4i2YqMBGudfCYI3KY3BdvjQQByGgT9jVcEBalYTWvurtshZ04VwFNtjBqoPLB9ZQsi/KFc/OZC2w3bIPMap6ApRHNdm+RqPc89gPBsoJXMi9NC+rZ7FRECV9UpfHKWeroNgjKJE6frbbfD2dvrcoMidYFIjp46EylFp/5Q2+nDIROpL482mEdYgTIuQxXYTT1oClw1Bo9nyDuqPR6kqshrMY847jrFu18CKP9gbAeYMfHzplOHLqEvWY6d82xCPJ+Wcv5+JUc2N97rIseUMGDm9iwVUftRuWwMW/gwQ1NOcVQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>
 ```
 
-An interesting point is that this ransomware is what we call a "**copy ransomware**" as it creates a new file with the encrypted bytes and deletes the original one. This can make recovery possible in some cases.
+An interesting point is that this ransomware is what we call a "copy ransomware" as it creates a new file with the encrypted bytes and deletes the original one. This can make recovery possible in some cases.
 
 ![ ](/assets/images/cring_ransomware/image-20210407234151655.png)
 
@@ -106,7 +107,7 @@ Oops, your computer is encrypted. Don’t panic. You will be able to recover you
 Contact: qkhooks0708@protonmail.com
 ```
 
-# IOCs
+## IOCs
 
 ```
 # IOCs shared by Swisscom CSIRT
@@ -142,7 +143,7 @@ c5d712f82d5d37bb284acd4468ab3533 (Cring executable)
 45.67.231[.]128 (malware hosting)
 ```
 
-# References
+## References
 
 * [Kaspersky Report](https://usa.kaspersky.com/about/press-releases/2021_na-cring-ransomware-infects-industrial-targets-through-vulnerability-in-vpn-servers)
 * [Kaspersky ICS CERT Report](https://ics-cert.kaspersky.com/reports/2021/04/07/vulnerability-in-fortigate-vpn-servers-is-exploited-in-cring-ransomware-attacks/)

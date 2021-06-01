@@ -4,9 +4,9 @@ title:  "Analysis of a COBALTSTRIKE Loader possibly related with TRICKBOT crew"
 date:   2021-04-07
 categories: reversing
 ---
-# Introduction
+## Introduction
 
-As pointed out by security researchers from Walmart in **[this](https://medium.com/walmartglobaltech/trickbot-crews-new-cobaltstrike-loader-32c72b78e81c)** blog post, the Trickbot group seems to have a Cobalt Strike loader that uses GitHub to host encoded shellcode in the form of fake image files.
+As pointed out by security researchers from Walmart in [this](https://medium.com/walmartglobaltech/trickbot-crews-new-cobaltstrike-loader-32c72b78e81c) blog post, the Trickbot group seems to have a Cobalt Strike loader that uses GitHub to host encoded shellcode in the form of fake image files.
 
 According to the blog post, the IP address 74.118.138[.]113 belongs to an actor that was involved in Trickbot/CS intrusions and ransomware operations.
 
@@ -34,7 +34,7 @@ Beacon config:
 {"BeaconType": ["HTTPS"], "Port": 443, "SleepTime": 60000, "MaxGetSize": 1048576, "Jitter": 0, "MaxDNS": 255, "C2Server": "bird.allsafelink.com,/cx,masks.allsafelink.com,/visit.js", "UserAgent": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; NP09; NP09; MAAU)", "HttpPostUri": "/submit.php", "Malleable_C2_Instructions": [], "HttpGet_Metadata": ["Cookie"], "HttpPost_Metadata": ["Content-Type: application/octet-stream", "id"], "SpawnTo": "AAAAAAAAAAAAAAAAAAAAAA==", "PipeName": "", "DNS_Idle": "0.0.0.0", "DNS_Sleep": 0, "SSH_Host": "Not Found", "SSH_Port": "Not Found", "SSH_Username": "Not Found", "SSH_Password_Plaintext": "Not Found", "SSH_Password_Pubkey": "Not Found", "HttpGet_Verb": "GET", "HttpPost_Verb": "POST", "HttpPostChunk": 0, "Spawnto_x86": "%windir%\\syswow64\\rundll32.exe", "Spawnto_x64": "%windir%\\sysnative\\rundll32.exe", "CryptoScheme": 0, "Proxy_Config": "Not Found", "Proxy_User": "Not Found", "Proxy_Password": "Not Found", "Proxy_Behavior": "Use IE settings", "Watermark": 0, "bStageCleanup": "False", "bCFGCaution": "False", "KillDate": 0, "bProcInject_StartRWX": "True", "bProcInject_UseRWX": "True", "bProcInject_MinAllocSize": 0, "ProcInject_PrependAppend_x86": "Empty", "ProcInject_PrependAppend_x64": "Empty", "ProcInject_Execute": ["CreateThread", "SetThreadContext", "CreateRemoteThread", "RtlCreateUserThread"], "ProcInject_AllocationMethod": "VirtualAllocEx", "bUsesCookies": "True", "HostHeader": ""}
 ```
 
-# Cobalt Strike GitHub Loader
+## Cobalt Strike GitHub Loader
 
 The hash of the loader is the following:
 
@@ -116,7 +116,7 @@ Beacon config:
 {"BeaconType": ["HTTPS"], "Port": 443, "SleepTime": 6145, "MaxGetSize": 2097468, "Jitter": 55, "MaxDNS": "Not Found", "C2Server": "subs.rainbowmango.info ,/share/pink,food.rainbowmango.info,/share/pink", "UserAgent": "Not Found", "HttpPostUri": "/us", "Malleable_C2_Instructions": ["Remove 36 bytes from the end", "NetBIOS decode 'a'", "Remove 140 bytes from the end"], "HttpGet_Metadata": "Not Found", "HttpPost_Metadata": "Not Found", "SpawnTo": "AAAAAAAAAAAAAAAAAAAAAA==", "PipeName": "Not Found", "DNS_Idle": "Not Found", "DNS_Sleep": "Not Found", "SSH_Host": "Not Found", "SSH_Port": "Not Found", "SSH_Username": "Not Found", "SSH_Password_Plaintext": "Not Found", "SSH_Password_Pubkey": "Not Found", "HttpGet_Verb": "GET", "HttpPost_Verb": "POST", "HttpPostChunk": 0, "Spawnto_x86": "%windir%\\syswow64\\gpupdate.exe", "Spawnto_x64": "%windir%\\sysnative\\gpupdate.exe", "CryptoScheme": 0, "Proxy_Config": "Not Found", "Proxy_User": "Not Found", "Proxy_Password": "Not Found", "Proxy_Behavior": "Use IE settings", "Watermark": 1359593325, "bStageCleanup": "False", "bCFGCaution": "False", "KillDate": 0, "bProcInject_StartRWX": "False", "bProcInject_UseRWX": "False", "bProcInject_MinAllocSize": 16535, "ProcInject_PrependAppend_x86": "Empty", "ProcInject_PrependAppend_x64": "Empty", "ProcInject_Execute": ["CreateThread", "CreateRemoteThread", "ntdll.dll:RtlUserThreadStart", "SetThreadContext", "NtQueueApcThread-s", "kernel32.dll:LoadLibraryA", "RtlCreateUserThread"], "ProcInject_AllocationMethod": "VirtualAllocEx", "bUsesCookies": "True", "HostHeader": ""}
 ```
 
-# IOCs
+## IOCs
 
 ```
 IP Addresses

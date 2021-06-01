@@ -5,7 +5,7 @@ date:   2021-02-26
 categories: reversing
 ---
 
-# Introduction
+## Introduction
 
 While thinking about anti-VM and anti-sandbox tricks I had the idea of implementing a simple check for a valid windows license. The goal is basically check if we are running on a legit Windows operating system and if not, abort the execution.
 
@@ -23,18 +23,12 @@ The second argument is a pointer to an [SL_GENUINE_STATE](https://docs.microsoft
 
 The third argument is used to show a dialog box so I'll leave it NULL.
 
-The Proof-of-Concept program is really simple as it only checks if the current status is **SL_GEN_STATE_IS_GENUINE** and opens a message box with a message.
+The Proof-of-Concept program is really simple as it only checks if the current status is SL_GEN_STATE_IS_GENUINE and opens a message box with a message.
 
-# Licensed Windows
+## Licensed Windows
 
 ![image-20210226211714915](/assets/images/is_your_windows_legit/image-20210226211714915.png)
 
-# Unlicensed Windows
+## Unlicensed Windows
 
 ![image-20210226205131390](/assets/images/is_your_windows_legit/image-20210226205131390.png)
-
-# Conclusion
-
-This is a simple method to detect if the Windows is legit or not and it will only work as long as the system does not have a valid license.
-
-But yep, it can do the trick...

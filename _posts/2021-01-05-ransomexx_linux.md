@@ -5,9 +5,12 @@ date:   2021-01-05
 categories: reversing
 ---
 
+## Introduction
+
 In this blog point I will go through a Linux sample of the ransomware family RansomEXX (aka Defray777). This ransomware group did some big attacks during 2020 and only Windows samples were known until [Kaspersky](https://securelist.com/ransomexx-trojan-attacks-linux-systems/99279/) revealed that the group also had a Linux build.
 
-# Reversing
+## Reversing
+
 This ransomware uses AES in ECB mode with a 256 bit key for file encryption and RSA to encrypt the AES key used for file encryption. The encrypted key is then added as a blob of metadata to every encrypted file. This way the group guarantees that only them can recover the AES key used to encrypt the each file.
 
 For encryption the ransomware uses a library named [mbedtls](https://tls.mbed.org) and it also implements a nice logic for speeding the encryption as it uses threads with in memory "queues".
@@ -16,7 +19,7 @@ So let's go through the main functionality of this sample and start with main fu
 
 ![main](/assets/images/ransomexx_linux/image1.png)
 
-The function named **GeneratePreData()**  generates the 256 bit AES key and also encrypts it using RSA.
+The function named GeneratePreData()  generates the 256 bit AES key and also encrypts it using RSA.
 
 Generating a random AES key:
 
@@ -46,14 +49,14 @@ It is important to notice that the ransomware expects the paths for file encrypt
 
 ![Parsing Argv](/assets/images/ransomexx_linux/image8.png)
 
-The function **EnumFiles()** takes a path as an argument and it will:
+The function EnumFiles() takes a path as an argument and it will:
 
 - Initialize the workers (threads) for file encryption.
-- Recursively search the directory for files by calling **list_dir()**.
+- Recursively search the directory for files by calling list_dir().
 
-The function **list_dir()** creates a ransomnote inside the current directory (where the search starts) by calling **ReadMeStoreForDir()** and it starts searching for files.
+The function list_dir() creates a ransomnote inside the current directory (where the search starts) by calling ReadMeStoreForDir() and it starts searching for files.
 
-If a new file is found and it's not either the ransom note or an already encrypted file it will then be added to the workers "queue" in memory by calling **add_task_to_worker()**. 
+If a new file is found and it's not either the ransom note or an already encrypted file it will then be added to the workers "queue" in memory by calling add_task_to_worker(). 
 
 If a directory is found and it's not either "." or ".." then the function calls itself again but this time with a new directory to search, and so on...
 
@@ -65,16 +68,18 @@ The workers use AES in ECB mode to encrypt the files:
 
 ![AES encryption](/assets/images/ransomexx_linux/image10.png)
 
-# Ransomnote
+## Ransomnote
 
 The ransomnote is written to a file with following name structure `!NEWS_FOR_<COMPANY>!.txt`. As seen, this sample was designed for [EIGS](https://www.eigsi.fr/):
 
 ![Ransomnote](/assets/images/ransomexx_linux/image11.png)
 
-# Conclusion
+## Conclusion
 
 Ransomware is nasty but it can be profitable for the threat actors and not even Linux is safe from this kind of threats. The best way to prevent this kind of threat is to always be prepared for it.
 
-SHA256:
+File:
 
-CB408D45762A628872FA782109E8FCFC3A5BF456074B007DE21E9331BB3C5849
+```
+SHA256: CB408D45762A628872FA782109E8FCFC3A5BF456074B007DE21E9331BB3C5849
+```

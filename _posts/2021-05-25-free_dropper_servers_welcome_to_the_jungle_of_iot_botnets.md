@@ -5,7 +5,7 @@ date:   2021-05-25
 categories: reversing
 ---
 
-# Introduction
+## Introduction
 
 For this one, I decided to write about something a bit different than malware reversing. Of course, it's somehow connected but that's not the point! :)
 
@@ -25,7 +25,7 @@ At this point, I had to guess how these administration panels could be used to d
 
 Ok... file upload. Very nice, but that's not all.
 
-After searching on Shodan, I found that this misconfigured appliance besides the webserver was also exposing **FTP** and **telnet**.
+After searching on Shodan, I found that this misconfigured appliance besides the webserver was also exposing FTP and telnet.
 
 Inside the telnet interface:
 
@@ -163,18 +163,18 @@ version -- Software version string
 
 There are lots of cool options to abuse in this list... I will highlight here a few good ones:
 
-- **curl** - cURL command to fetch/upload data
-- **ls**
-- **rm** - Remove file (no wildcards)
-- **telnet** - Telnet client application
-- **psh** - Execute batch file
-- **useradd** - Add a new user account or modify admin access level
-- **userdel** - Delete a user account
-- **users** - List all users
+- curl - cURL command to fetch/upload data
+- ls
+- rm - Remove file (no wildcards)
+- telnet - Telnet client application
+- psh - Execute batch file
+- useradd - Add a new user account or modify admin access level
+- userdel - Delete a user account
+- users - List all users
 
-# Misconfigured devices in the wild 
+## Misconfigured devices in the wild 
 
-So far I was able to identify **123** misconfigured devices on the internet exposing the telnet interface.
+So far I was able to identify 123 misconfigured devices on the internet exposing the telnet interface.
 
 ![ ](/assets/images/free_dropper_servers_welcome_to_the_jungle_of_iot_botnets/image-20210525165418226.png)
 
@@ -188,7 +188,7 @@ Numbers of devices by country:
 | New Zealand   | 3     |
 | Italy         | 2     |
 
-Additionally, I was able to quickly test **114** IP addresses out of the **123** that were found exposing the telnet interface, and I confirmed that **107** have the arbitrary file upload endpoint exposed to the internet:
+Additionally, I was able to quickly test 114 IP addresses out of the 123 that were found exposing the telnet interface, and I confirmed that 107 have the arbitrary file upload endpoint exposed to the internet:
 
 ![ ](/assets/images/free_dropper_servers_welcome_to_the_jungle_of_iot_botnets/image-20210525172034179.png)
 
