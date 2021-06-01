@@ -24,7 +24,7 @@ There is no need to understand all the details of the algorithms used by this pa
 
 Instead, I need to understand the flow of the unpacking routines and try to identify a stage where the payload is unpacked in memory so that I could dump it.
 
-## First stage
+### First stage
 
 In this first stage, the packer executes several worthless instructions, functions, and loops to slow down the analysis. It also uses some anti-emulation techniques, possibly to avoid being executed by emulators like Qiling. Below it's possible to see some examples.
 
@@ -48,7 +48,7 @@ Another anti-emulation method used, was the usage of **GetLastError** Windows AP
 
 The packer calls **SetWindowContextHelpId** with an invalid handle and checks if the last error equals **ERROR_INVALID_WINDOW_HANDLE** that corresponds to the value **0x578**.
 
-## Second stage
+### Second stage
 
 In this stage, the packer simply allocates a new memory region, decrypts a shellcode, copies the shellcode to the newly allocated memory, and transfers execution to it.
 
@@ -68,7 +68,7 @@ As seen, a handle to **KERNEL32.dll** is passed to the shellcode.
 
 This handle is later used to resolve the needed APIs.
 
-## Third stage - final shellcode
+### Third stage - final shellcode
 
 In this last stage, the shellcode decrypts the payload and loads it using a self replacement technique.
 
@@ -132,7 +132,7 @@ Description from the official website:
 
 The advantage of using a framework like this to unpack malware is that the need to fully understand the unpacking algorithm is eliminated. Also, the unpacker script may survive updates in the algorithm of the packer.
 
-## Bypass GetLastError anti-emulation trick
+### Bypass GetLastError anti-emulation trick
 
 As seen before, this packer uses the **GetLastError** to check if the last error code was **0x578** after calling **SetWindowContextHelpId**.
 
@@ -158,7 +158,7 @@ def hook_GetWindowContextHelpId(ql, address, params):
     return False
 ```
 
-## Patching the large anti-emulation loop
+### Patching the large anti-emulation loop
 
 As seen before, the packer uses a large "for" loop possibly to avoid being executed under emulators like Qiling.
 
@@ -202,7 +202,7 @@ def patch_bytes(ql):
             ql.log.warning('target patch bytes not found')
 ```
 
-## Overcoming Qiling limitations
+### Overcoming Qiling limitations
 
 Some Windows APIs are not yet implemented in Qiling, thus I needed to implement them. 
 
@@ -240,7 +240,7 @@ def hook_VirtualQuery(ql, address, params):
     return params['dwLength']
 ```
 
-## Defining the needed hooks
+### Defining the needed hooks
 
 With the anti-emulation loop patched and the Qiling limitations been taken care of, it was a matter of hooking the rest of the needed functions to keep up with the unpacking strategy.
 
@@ -345,6 +345,3 @@ You can find the full script in [**this gist**](https://gist.github.com/jnzer0/3
 - [Automated malware unpacking with binary emulation](https://lopqto.me/posts/automated-malware-unpacking)
 - [Using Qiling Framework to Unpack TA505 packed samples](https://www.blueliv.com/cyber-security-and-cyber-threat-intelligence-blog-blueliv/using-qiling-framework-to-unpack-ta505-packed-samples/)
 - [Qiling Framework Documentation](https://docs.qiling.io/en/latest/)
-
-
-

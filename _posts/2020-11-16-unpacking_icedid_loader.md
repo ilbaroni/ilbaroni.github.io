@@ -7,7 +7,7 @@ categories: reversing
 
 In this blog post I will show how to unpack a recent IcedId loader. The file that I'm going to unpack is available [here](https://bazaar.abuse.ch/sample/4734648ab6553ba7bfb89776ac59a6ce1d71828ce69ef2e39e985a14e60f1372/).
 
-## Introduction
+# Introduction
 
 Before starting let's understand what is a packer. Basically, to malware developers the goal of using a packer is to protect the final payload/executable file not only from anti virus but also from malware analysts by increasing as much as possible the time required for analysis.
 
@@ -15,7 +15,7 @@ After packing an executable, the new executable will contain 2 important things:
 
 Now it comes the question, what is an unpacking stub? The unpacking stub is basically a piece of shellcode that will decrypt/decompress the packed code, allocate memory for it and transfer the execution to the original entry point (aka OEP). Although, some packers will try to inject the unpacked code to a remote process, so it's not always going to be equal when it comes to unpack code!
 
-## Unpacking IcedId
+# Unpacking IcedId
 
 So, IcedId loaders normally do self injection which means that they will decrypt and decompress the packed code and somehow transfer execution to it inside of it's own process memory. Note, that I will not be deep diving into the packing routine here and just on how to get the final unpacked executable.
 
