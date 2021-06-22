@@ -138,7 +138,7 @@ The length of the data that follows depends on the structure type (**yellow**). 
 
 With this information, I was able to build a parser in Rust (it's a work in progress but already gets the job done). Also, do not judge my Rust skills ^^
 
-GitHub link: https://github.com/ilbaroni/dsstore_parser
+[github repo](https://github.com/ilbaroni/dsstore_parser)
 
 Example of the output from the parser:
 
@@ -148,9 +148,9 @@ Example of the output from the parser:
 
 # References
 
-* https://0day.work/parsing-the-ds_store-file-format/
-* https://metacpan.org/dist/Mac-Finder-DSStore/view/DSStoreFormat.pod
-* https://wiki.mozilla.org/DS_Store_File_Format
+* [https://0day.work/parsing-the-ds_store-file-format/](https://0day.work/parsing-the-ds_store-file-format/)
+* [https://metacpan.org/dist/Mac-Finder-DSStore/view/DSStoreFormat.pod](https://metacpan.org/dist/Mac-Finder-DSStore/view/DSStoreFormat.pod)
+* [https://wiki.mozilla.org/DS_Store_File_Format](https://wiki.mozilla.org/DS_Store_File_Format)
 
 
 
