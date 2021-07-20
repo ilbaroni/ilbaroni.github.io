@@ -59,7 +59,7 @@ As seen, it worked!
 
 Now with a working script to decrypt the beacon and a working beacon config extractor, I can combine them to extract indicators automatically.
 
-That's it. The full script can be found in [this gist](https://gist.github.com/jnzer0/54a7a153d49b4e9b9e31ecc654f9b80d).
+That's it. The full script can be found in [this gist](https://gist.github.com/ilbaroni/54a7a153d49b4e9b9e31ecc654f9b80d).
 
 Cheers!
 

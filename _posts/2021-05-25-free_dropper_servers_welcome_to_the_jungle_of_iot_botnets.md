@@ -5,25 +5,19 @@ date:   2021-05-25
 categories: reversing
 ---
 
-## Introduction
-
-For this one, I decided to write about something a bit different than malware reversing. Of course, it's somehow connected but that's not the point! :)
-
-So, we all know that IoT botnets are a wild west and that there are lots of devices with little security, and yet they still somehow get exposed on the internet. 🤷
-
-I was tracking an IoT botnet, and recently there was a new update (new builds, new c2, new dropper servers, etc) and I came across a new sample that had a new dropper server configured in the code:
+I was tracking an IoT botnet, and recently there was a new update (new builds, new command and control, new dropper servers, etc) and I came across a sample that had a new dropper server configured in the code:
 
 ![ ](/assets/images/free_dropper_servers_welcome_to_the_jungle_of_iot_botnets/image-20210525154008046.png)
 
-Normally, the dropper servers are regular cheap droplets that are used to distribute the main bot but this one was different. Instead, it was an exposed Cambium Networks PMP 450x administration panel (I guess these are like WIFI access points):
+Normally, the dropper servers are cheap droplets used to distribute the main bot payload, but this one was different... Instead, it was an exposed **Cambium Networks PMP 450x** administration panel (I guess these are like WIFI access points):
 
 ![ ](/assets/images/free_dropper_servers_welcome_to_the_jungle_of_iot_botnets/image-20210525154838556.png)
 
-At this point, I had to guess how these administration panels could be used to distribute malware samples and after poking around I found an interesting endpoint, which was: `/upload.html`
+At this point, I had to guess how these administration panels could be used to distribute malware samples and after poking around I found an interesting endpoint, which wasthe following: `/upload.html`
 
 ![ ](/assets/images/free_dropper_servers_welcome_to_the_jungle_of_iot_botnets/image-20210525155229469.png)
 
-Ok... file upload. Very nice, but that's not all.
+Ok... these panels have a file upload endpoint. Very nice, but that's not all.
 
 After searching on Shodan, I found that this misconfigured appliance besides the webserver was also exposing FTP and telnet.
 
@@ -174,7 +168,7 @@ There are lots of cool options to abuse in this list... I will highlight here a 
 
 ## Misconfigured devices in the wild 
 
-So far I was able to identify 123 misconfigured devices on the internet exposing the telnet interface.
+So far I was able to identify 123 misconfigured devices on the internet exposing the telnet interface:
 
 ![ ](/assets/images/free_dropper_servers_welcome_to_the_jungle_of_iot_botnets/image-20210525165418226.png)
 
@@ -188,10 +182,6 @@ Numbers of devices by country:
 | New Zealand   | 3     |
 | Italy         | 2     |
 
-Additionally, I was able to quickly test 114 IP addresses out of the 123 that were found exposing the telnet interface, and I confirmed that 107 have the arbitrary file upload endpoint exposed to the internet:
+Additionally, I was able to quickly test 114 IP addresses (out of the 123 in total) that were found exposing the telnet interface, and I confirmed that 107 have the arbitrary file upload endpoint exposed to the internet:
 
 ![ ](/assets/images/free_dropper_servers_welcome_to_the_jungle_of_iot_botnets/image-20210525172034179.png)
-
-# Conclusion
-
-Welcome to the jungle :)
