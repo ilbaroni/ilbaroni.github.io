@@ -2,7 +2,7 @@
 layout: post
 title:  "Vulnserver exploitation series :: TRUN (Vanilla EIP overwrite)"
 date:   2021-07-24
-categories: exploit
+categories: exploitation
 ---
 
 
