@@ -5,6 +5,8 @@ date:   2021-06-22
 categories: research
 ---
 
+
+
 I was trying to find a project to code in Rust, so I thought about understanding the Apple .DS_Store file format and writing a parser in Rust. 
 
 Apple finder creates these files, and they contain records that give attributes to files or directories.
@@ -21,11 +23,13 @@ The header has 36 bytes:
 
 ![ ](/assets/images/apple_dsstore_file_format/1.png)
 
+
+
 The first 4-byte integer (**red**) is always `0x00000001` and the magic bytes (**green**) follow, which have the value 0x42756431.
 
 After the magic bytes, there is a sequence of three 4-byte integers. The first and the third (**blue**) represent the offset to the buddy allocator, and both must hold the same value, which is `0x1000`.
 
-The 4-byte integer (**pink**) with the value `0x0800` represents the size of the buddy allocator. The remaining bytes (**grey**) for now are considered unknown data.
+The 4-byte integer (**pink**) with the value `0x0800` represents the size of the buddy allocator.
 
 
 
@@ -44,6 +48,8 @@ With the information from the header it is possible to exactly know where the bu
 This section holds a list of offsets to the blocks:
 
 ![ ](/assets/images/apple_dsstore_file_format/2.png)
+
+
 
 The first 4-byte integer `0x03` (**green**) represents how many offsets will be after the next four null-bytes (**grey**).
 
@@ -64,6 +70,8 @@ As seen, the section is padded with enough zeroes (**red**) to round the section
 This section usually contains at least an entry named `DSDB` with a block ID of `0x01`. 
 
 ![ ](/assets/images/apple_dsstore_file_format/3.png)
+
+
 
 The bytes in **red** are still padding bytes from the last section. As seen, this section starts with the number of entries to parse (**blue**).
 
@@ -98,6 +106,8 @@ Now with the decoded offset and the size of the master block, let's inspect the 
 
 ![ ](/assets/images/apple_dsstore_file_format/4.png)
 
+
+
 A master block has five integer values:
 
 - The block number of the root node of the B-tree (**green**)
@@ -118,6 +128,8 @@ Decoded offset and size:
 ### Root node and the records
 
 ![ ](/assets/images/apple_dsstore_file_format/5.png)
+
+
 
 The root node starts with the following integers:
 
