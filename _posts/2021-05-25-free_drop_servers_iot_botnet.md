@@ -1,27 +1,27 @@
 ---
 layout: post
-title:  "Free Dropper Servers - Welcome to the jungle of IoT botnets"
+title:  "Free drop Servers - Welcome to the jungle of IoT botnets"
 date:   2021-05-25
-categories: reversing
+categories: research
 ---
 
 
 
-I was tracking an IoT botnet, and recently there was an update (new builds, new command and control, new dropper servers, etc) and I came across a sample that had a new dropper server configured in the code:
+I was tracking an IoT botnet, and recently there was an update (new builds, new command and control, new drop servers, etc) and I came across a sample that had a new drop server configured in the code:
 
-![ ](/assets/images/free_dropper_servers/image-20210525154008046.png)
+![ ](/assets/images/free_drop_servers_iot_botnet/image-20210525154008046.png)
 
 
 
-Normally, the dropper servers are cheap droplets used to distribute the main bot payload, but this one was different... It was an exposed **Cambium Networks PMP 450x** administration panel (I guess these are like WIFI access points):
+Normally, the drop servers are cheap droplets used to distribute the main bot payload, but this one was different... It was an exposed **Cambium Networks PMP 450x** administration panel (I guess these are like WIFI access points):
 
-![ ](/assets/images/free_dropper_servers/image-20210525154838556.png)
+![ ](/assets/images/free_drop_servers_iot_botnet/image-20210525154838556.png)
 
 
 
 At this point, I had to guess how these administration panels could be used to distribute malware samples and after poking around I found an interesting endpoint, which wasthe following: `/upload.html`
 
-![ ](/assets/images/free_dropper_servers/image-20210525155229469.png)
+![ ](/assets/images/free_drop_servers_iot_botnet/image-20210525155229469.png)
 
 
 
@@ -31,7 +31,7 @@ After searching on Shodan, I found that this misconfigured appliance was also ex
 
 Inside the telnet interface:
 
-![ ](/assets/images/free_dropper_servers/inside_telnet.png)
+![ ](/assets/images/free_drop_servers_iot_botnet/inside_telnet.png)
 
 
 
@@ -184,7 +184,7 @@ There are lots of cool options to abuse in this list... I will highlight here a 
 
 So far I was able to identify 123 misconfigured devices on the internet exposing the telnet interface:
 
-![ ](/assets/images/free_dropper_servers/image-20210525165418226.png)
+![ ](/assets/images/free_drop_servers_iot_botnet/image-20210525165418226.png)
 
 
 
@@ -202,4 +202,4 @@ Numbers of devices by country:
 
 Additionally, I was able to quickly test 114 IP addresses (out of the 123 in total) that were found exposing the telnet interface, and I confirmed that 107 have the arbitrary file upload endpoint exposed to the internet:
 
-![ ](/assets/images/free_dropper_servers/image-20210525172034179.png)
+![ ](/assets/images/free_drop_servers_iot_botnet/image-20210525172034179.png)

@@ -2,7 +2,7 @@
 layout: post
 title:  "Is your windows legit? A possible anti sandbox trick"
 date:   2021-02-26
-categories: programming
+categories: research
 ---
 
 ## Introduction
