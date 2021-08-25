@@ -385,7 +385,7 @@ As seen, [PE-BEAR](https://github.com/hasherezade/pe-bear-releases/releases) ope
 
 I can see the potential in using a framework like Qiling to automate reverse engineering tasks, and I'll keep exploring emulation and other use cases besides unpacking.
 
-[**Here**]() you can find the source code for the emulator
+[**Here**](https://github.com/ilbaroni/qiling_ragnarlocker_unpacker) you can find the source code for the emulator
 
 
 
