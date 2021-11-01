@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 
+title:  Malware Wall
 permalink: /wall/
 ---
 
