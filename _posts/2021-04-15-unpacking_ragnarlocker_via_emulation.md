@@ -385,14 +385,201 @@ As seen, [PE-BEAR](https://github.com/hasherezade/pe-bear-releases/releases) ope
 
 I can see the potential in using a framework like Qiling to automate reverse engineering tasks, and I'll keep exploring emulation and other use cases besides unpacking.
 
-[**Here**](https://github.com/ilbaroni/qiling_ragnarlocker_unpacker) you can find the source code for the emulator
 
 
-
-## Packed sample:
+## Packed sample
 
 ```
 68eb2d2d7866775d6bf106a914281491d23769a9eda88fc078328150b8432bb3
+```
+
+
+
+## Full code
+
+```python
+from qiling import *
+from qiling.const import *
+from qiling.exception import *
+from qiling.os.const import *
+from qiling.os.windows.const import *
+from qiling.os.windows.fncc import *
+from qiling.os.windows.handle import *
+from qiling.os.windows.thread import *
+from qiling.os.windows.utils import *
+
+import sys
+from sys import exit
+from os.path import expanduser
+
+mem_regions = []
+
+def dump_memory_region(ql, address, size):
+    ql.log.warning('dumping memory section at: {}'.format(hex(address)))
+    ql.log.warning('size: {}'.format(hex(size)))
+    try:
+        exec_mem = ql.mem.read(address, size)
+        with open('{}.bin'.format(hex(address)), "wb") as f:
+            f.write(exec_mem)
+    except Exception as e:
+        ql.log.error(str(e))
+'''
+Not implemented in Qiling
+'''
+@winsdkapi(cc=STDCALL, dllname="user32_dll")
+def hook_CharUpperW(ql, address, params):
+    return params["lpsz"]
+
+'''
+Not implemented in Qiling
+'''
+@winsdkapi(cc=STDCALL, dllname="user32_dll")
+def hook_CharUpperBuffW(ql, address, params):
+    return 100
+
+'''
+This api is giving troubles to Qiling in the way the malware passes arguments.
+So let's hook it and making it returning null since the packer does not use the return value for nothing.
+'''
+@winsdkapi(cc=STDCALL, dllname="kernel32_dll")
+def hook_CreateEventA(ql, address, params):
+    return 0
+
+'''
+Qiling is retuning 0x0 by default and the packer stub only continues if this value is different from 0.
+So let's just hook it and make it return a value different then 0
+'''
+@ winsdkapi(cc=STDCALL, dllname="kernel32_dll")
+def hook_VirtualQuery(ql, address, params):
+    return params['dwLength']
+
+'''
+Anti emulation
+We need this api to set the last error code to be: 0x578
+'''
+@winsdkapi(cc=STDCALL, dllname="user32_dll")
+def hook_SetWindowContextHelpId(ql, address, params):
+    ERROR_INVALID_WINDOW_HANDLE = 0x578
+    ql.os.last_error = ERROR_INVALID_WINDOW_HANDLE
+    return False
+
+'''
+Anti emulation
+It is called with SetWindowContextHelpId.
+Since this api is not implemented in Qiling we need to implement it too and make it set the correct error code.
+'''
+@winsdkapi(cc=STDCALL, dllname="user32_dll")
+def hook_GetWindowContextHelpId(ql, address, params):
+    ERROR_INVALID_WINDOW_HANDLE = 0x578
+    ql.os.last_error = ERROR_INVALID_WINDOW_HANDLE
+    return False
+
+
+@winsdkapi(cc=STDCALL, dllname="kernel32_dll")
+def hook_VirtualFree(ql, address, params):
+    global mem_regions
+    lpAddress = params['lpAddress']
+
+    ql.log.warning('VirtualFree called. lpAddress = {}'.format(hex(lpAddress)))
+    ql.log.warning('time to dump last allocated memory...')
+    unpacked_mem_region = mem_regions[-1]
+    dump_memory_region(ql, unpacked_mem_region['start'], unpacked_mem_region['size'])
+    ql.os.heap.free(lpAddress)
+    exit()
+    return 1
+
+@winsdkapi(cc=STDCALL, dllname="kernel32_dll")
+def hook_VirtualProtect(ql, address, params):
+    return 1
+
+@winsdkapi(cc=STDCALL, dllname="kernel32_dll")
+def hook_VirtualAllocEx(ql, address, params):
+    global mem_regions
+
+    dw_size = params["dwSize"]
+    addr = ql.os.heap.alloc(dw_size) # allocate memory in heap
+
+    ql.log.warning('VirtualAllocEx hook allocated a new memory on the heap at -> {} with size -> {} bytes'.format(hex(addr), hex(dw_size)))
+
+    mem_reg = {"start": addr, "size": dw_size}
+    mem_regions.append(mem_reg)
+    return addr
+
+
+@winsdkapi(cc=STDCALL, dllname="kernel32_dll")
+def hook_VirtualAlloc(ql, address, params):
+    global mem_regions
+
+    dw_size = params["dwSize"]
+    addr = ql.os.heap.alloc(dw_size) # allocate memory in heap
+
+    ql.log.warning('VirtualAlloc hook allocated a new memory on the heap at -> {} with size -> {} bytes'.format(hex(addr), hex(dw_size)))
+
+    mem_reg = {"start": addr, "size": dw_size}
+    mem_regions.append(mem_reg)
+    return addr
+
+# Patch specific byte patterns
+def patch_bytes(ql):
+    patches = []
+
+    # Patch needed to avoid the anti-emulation loop
+    # original bytes -> 81 BD 48 FE FF FF 80 84 1E 00 = cmp dword ptr ss:[ebp-1B8],1E8480
+    # patched bytes ->  83 BD 48 FE FF FF 00 90 90 90 = cmp dword ptr ss:[ebp-1B8],0
+    patches.append({'original': b'\x81\xBD\x48\xFE\xFF\xFF\x80\x84\x1E\x00', 'patch': b'\x83\xBD\x48\xFE\xFF\xFF\x00\x90\x90\x90'})
+
+    for patch in patches:
+        addr = ql.mem.search(patch['original'])
+        if addr:
+            ql.log.warning('found target patch bytes at addr: {}'.format(hex(addr[0])))
+            try:
+                ql.patch(addr[0], patch['patch'])
+                ql.log.info('patch sucessfully applied')
+                return
+            except Exception as err:
+                ql.log.error('unable to apply the patch. error: {}'.format(str(e)))
+        else:
+            ql.log.warning('target patch bytes not found')
+
+
+def sandbox(path, rootfs):
+    # Create a sandbox for windows x86
+    ql = Qiling([path], rootfs, verbose=QL_VERBOSE.DEFAULT, console=True)
+
+    # Apply the hooks
+    ql.set_api("VirtualAlloc", hook_VirtualAlloc)
+    ql.set_api("VirtualAllocEx", hook_VirtualAllocEx)
+    ql.set_api("VirtualProtect", hook_VirtualProtect)
+    ql.set_api('CharUpperW', hook_CharUpperW)
+    ql.set_api('CharUpperBuffW', hook_CharUpperBuffW)
+    ql.set_api('SetWindowContextHelpId', hook_SetWindowContextHelpId)
+    ql.set_api('GetWindowContextHelpId', hook_GetWindowContextHelpId)
+    ql.set_api('CreateEventA', hook_CreateEventA)
+    ql.set_api('VirtualQuery', hook_VirtualQuery)
+    ql.set_api('VirtualFree', hook_VirtualFree)
+
+    # Path anti emulation loops
+    patch_bytes(ql)
+
+    # Start the sandbox
+    try:
+        ql.run()
+    except Exception as e:
+        print('error: {}'.format(str(e)))
+        exit(-1)
+
+
+def main():
+    if not len(sys.argv) == 2:
+        print(f"usage: {sys.argv[0]} <exefile>")
+        return
+
+    path = sys.argv[1]
+    rootfs = f"{expanduser('~')}/qiling/examples/rootfs/x86_windows"
+    sandbox(path, rootfs)
+
+if __name__ == "__main__":
+    main()
 ```
 
 

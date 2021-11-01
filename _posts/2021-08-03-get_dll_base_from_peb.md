@@ -43,7 +43,7 @@ typedef struct _PEB {
 
 
 
-> **Note**: The reserved names are there because Microsoft officially does not document all the fields from the PEB.
+> **Note**: The reserved names are there because Microsoft officially does not document all fields from the PEB structure.
 
 
 
@@ -146,9 +146,3 @@ A snippet of an implementation of this technique as seen by the hex-rays decompi
 ![ ](/assets/images/get_dll_base_from_peb/image-20210731010014781.png)
 
 
-
-That's it! That's how sometimes malware gets the base address of `KERNEL32.DLL` and `NTDLL.DLL` from the Process Environment Block.
-
-
-
-Cheers!

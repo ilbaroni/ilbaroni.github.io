@@ -9,8 +9,6 @@ categories: research
 
 While thinking about anti-VM and anti-sandbox tricks I had the idea of implementing a simple check for a valid windows license. The goal is basically check if we are running on a legit Windows operating system and if not, abort the execution.
 
-Use case for this? Well, evade automated analysis systems that use unlicensed images of Windows.
-
 Google-fu pointed me to this api: [SLIsGenuineLocal()](https://docs.microsoft.com/en-us/windows/win32/api/slpublic/nf-slpublic-slisgenuinelocal?redirectedfrom=MSDN).
 
 ![ ](/assets/images/is_your_windows_legit/image-20210226201255018.png)
