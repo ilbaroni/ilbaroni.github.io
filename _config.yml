@@ -18,7 +18,7 @@ email: ilbaroni@pm.me
 #description: >- # this means to ignore newlines until "baseurl:"
    
 url: "http://reversing.fun" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: ilbaroni_
+#twitter_username: ilbaroni_
 #github_username: ilbaroni
 #linkedin_username: foobar
 
