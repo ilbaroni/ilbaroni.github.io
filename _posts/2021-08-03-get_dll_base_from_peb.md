@@ -2,7 +2,7 @@
 layout: post
 title:  "How to get a DLL base address from the Process Environment Block (PEB)"
 date:   2021-08-03
-categories: research
+categories: posts
 ---
 
 

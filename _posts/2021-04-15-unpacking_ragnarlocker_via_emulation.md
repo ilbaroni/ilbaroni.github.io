@@ -2,7 +2,7 @@
 layout: post
 title:  "Unpacking RAGNARLOCKER via emulation"
 date:   2021-04-15
-categories: reversing
+categories: posts
 ---
 
 ## Introduction
