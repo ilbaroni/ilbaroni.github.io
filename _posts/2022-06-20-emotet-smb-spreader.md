@@ -82,9 +82,9 @@ The spreader iterates over the list of servers and bruteforces the IPC$ share wi
 
 ![image-20220620190132580](/assets/images/emotet_smb_spreader/image-20220620190132580.png)
 
-> The function fn_connect_2_network_resource uses the WinAPI WNetAddConnection2W with the hardcoded credentials.
+The function fn_connect_2_network_resource uses the WinAPI `WNetAddConnection2W` with the hardcoded credentials.
 
-If no valid credentials are found, it tries to fetch usernames from the target server using the WinAPI `NetUserEnum`:
+If no valid credentials are found, the spreader tries to fetch usernames from the target server using the WinAPI `NetUserEnum`:
 
 ![image-20220620175820397](/assets/images/emotet_smb_spreader/image-20220620175820397.png)
 
