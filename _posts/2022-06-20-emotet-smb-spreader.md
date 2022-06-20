@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Emotet SMB spreader overview"
-date:   2022-01-30
+date:   2022-06-20
 categories: posts
 ---
 
