@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Is your windows legit? A possible anti sandbox trick"
+title:  "Is your windows legit? Anti sandbox"
 date:   2021-02-26
 categories: posts
 ---

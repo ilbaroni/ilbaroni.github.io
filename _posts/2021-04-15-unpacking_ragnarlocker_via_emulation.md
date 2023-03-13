@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Unpacking RAGNARLOCKER via emulation"
+title:  "Unpacking Ragnarlocker with emulation"
 date:   2021-04-15
 categories: posts
 ---
