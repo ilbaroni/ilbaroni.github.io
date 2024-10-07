@@ -1,21 +1,18 @@
 ---
 layout: post
 title:  "How to get a DLL base address from the Process Environment Block (PEB)"
-date:   2021-08-03
-categories: posts
+image_alt: {
+    url: "/assets/images/get_dll_base_from_peb_preview.png",
+    source: "self"
+}
+excerpt: "In this post I show how to get dll base addresses using the Process Environment Block (PEB) structure."
+date:    2021-08-03 00:00:00 -0000
+categories: []
 ---
 
+We often see malware families resolving Windows APIs dynamically and abusing the built-in Windows OS structures to so. The Process Environment Block (PEB) is a structure that contains information about the process itself and the loaded modules.
 
-
-Very often, we see malware families dynamically resolving the needed Windows APIs. One of the first steps that many malware families take is to get the base address of either `KERNEL32.DLL` or `NTDLL.DLL` from the Process Environment Block (`PEB`).
-
-
-
-The Process Environment Block (`PEB`) is a structure that contains information about the process itself and the loaded modules.
-
-
-
-The following is the official documented `PEB` structure ([MSDN](https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb)):
+PEB structure according to ([MSDN](https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb)):
 
 ```c
 typedef struct _PEB {
@@ -41,21 +38,11 @@ typedef struct _PEB {
 } PEB, *PPEB;
 ```
 
+One way of getting the pointer to PEB is, for example, by accessing a specific offset using the FS or GS register depending on the architecture. 
+- FS[0x30] - FS offset to PEB for 32 bit Windows
+- GS[0x60] - GS offset to PEB for 64 bit Windows
 
-
-> **Note**: The reserved names are there because Microsoft officially does not document all fields from the PEB structure.
-
-
-
-One way of getting the pointer to the `PEB` is, for example, by accessing a specific offset in the FS or GS register (depends on the architecture). 
-
-- FS[0x30] - 32 bit Windows
-- GS[0x60] - 64 bit Windows
-
-
-
-C code snippet for getting a valid pointer to `PEB`:
-
+Here's a C code snippet to get a pointer to PEB:
 ```c
 #ifndef _WIN64
 	    PEB* peb = (PEB*) __readfsdword(0x30);
@@ -64,9 +51,7 @@ C code snippet for getting a valid pointer to `PEB`:
 #endif
 ```
 
-
-
-After getting access to the `PEB` pointer, it's possible to access the `Ldr` field which, points to a `PEB_LDR_DATA` structure.
+Having the PEB pointer it is now possible to access the PEB.Ldr field which points to a PEB_LDR_DATA structure.
 
 ```
 0:000> dt ntdll!_PEB_LDR_DATA
@@ -81,13 +66,9 @@ After getting access to the `PEB` pointer, it's possible to access the `Ldr` fie
    +0x050 ShutdownThreadId : Ptr64 Void
 ```
 
+The PEB_LDR_DATA.InLoadOrderModuleList field points to a LIST_ENTRY structure.
 
-
-This structure contains the `InLoadOrderModuleList` field that points to a `LIST_ENTRY`.
-
-
-
-As seen below, the `LIST_ENTRY` structure is a double-linked list that contains two pointers. One pointer is for the next `LIST_ENTRY`, while the other is for the previous one.
+As seen below, a LIST_ENTRY structure is a double-linked list that contains two pointers. One pointer is for the next LIST_ENTRY structure, while the other is for the previous one.
 
 ```
 0:000> dt ntdll!_LIST_ENTRY
@@ -95,10 +76,7 @@ As seen below, the `LIST_ENTRY` structure is a double-linked list that contains 
    +0x008 Blink            : Ptr64 _LIST_ENTRY
 ```
 
-
-
-The **trick** is that in these `LIST_ENTRY` pointers there is another structure (a bigger one), which contains more data. This structure is named `LDR_DATA_TABLE_ENTRY` and below we can see its definition:
-
+The **trick** is that these LIST_ENTRY pointers are part of a another structure (a bigger one), which contains more data. This structure is named LDR_DATA_TABLE_ENTRY and below we can see its definition:
 ```
 0:000> dt ntdll!_LDR_DATA_TABLE_ENTRY
 ntdll!_LDR_DATA_TABLE_ENTRY
@@ -129,20 +107,10 @@ ntdll!_LDR_DATA_TABLE_ENTRY
 
 ```
 
+So if we cast a LIST_ENTRY pointer obtained from PEB_LDR_DATA.InLoadOrderModuleList as a LDR_DATA_TABLE_ENTRY pointer, we get access to more fields such as the BaseDllName and the DllBase:
 
+![](/assets/images/get_dll_base_from_peb1.png)
 
-By casting the `LIST_ENTRY` pointer as a pointer to the `LDR_DATA_TABLE_ENTRY` structure, we get access to some fields such as the `BaseDllName` and the `DllBase`:
+Here is a snippet of code that uses this technique to obtain the base address of a DLL:
 
-![ ](/assets/images/get_dll_base_from_peb/image-20210730234543419.png)
-
-
-
-> **Note**: The BaseDllName is in UNICODE.
-
-
-
-A snippet of an implementation of this technique as seen by the hex-rays decompiler:
-
-![ ](/assets/images/get_dll_base_from_peb/image-20210731010014781.png)
-
-
+![](/assets/images/get_dll_base_from_peb2.png)

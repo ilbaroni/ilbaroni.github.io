@@ -1,0 +1,31 @@
+---
+layout: default
+---
+
+<center><strong>Make sure to grab some</strong>
+<p>☕</p>
+<img id="random-panel" alt="Random Panel" width="780" />
+</center>
+
+<script>
+const aux = [
+    {% for file in site.static_files %}
+        {% if file.path contains '/assets/panels' and file.extname == '.png' %}
+        '{{ file.path }}',
+        {% endif %}
+    {% endfor %}
+];
+
+function getRandomImage() {
+    const randomIndex = Math.floor(Math.random() * aux.length);
+    return aux[randomIndex];
+}
+
+function changeImage() {
+    const randomImagePath = `${getRandomImage()}`;
+    document.getElementById('random-panel').src = randomImagePath;
+}
+
+setInterval(changeImage, 3000);
+changeImage();
+</script>
