@@ -12,7 +12,7 @@ categories: []
 
 We often see malware families resolving Windows APIs dynamically and abusing the built-in Windows OS structures to so. The Process Environment Block (PEB) is a structure that contains information about the process itself and the loaded modules.
 
-PEB structure according to ([MSDN](https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb)):
+PEB structure according to [MSDN](https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb):
 
 ```c
 typedef struct _PEB {
