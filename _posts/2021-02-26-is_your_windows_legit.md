@@ -3,7 +3,7 @@ layout: post
 title:  "Is your windows legit? Anti sandbox"
 image_alt: {
     url: "/assets/images/is_your_windows_legit_preview.png",
-    source: "self"
+    source: ""
 }
 excerpt: "While thinking about anti-VM and anti-sandbox tricks, I came up with the idea of ​​implementing a simple check to confirm whether the operating system has a valid license or not."
 date:    2021-02-26 00:00:00 -0000

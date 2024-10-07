@@ -3,7 +3,7 @@ layout: post
 title:  "How to get a DLL base address from the Process Environment Block (PEB)"
 image_alt: {
     url: "/assets/images/get_dll_base_from_peb_preview.png",
-    source: "self"
+    source: ""
 }
 excerpt: "In this post I show how to get dll base addresses using the Process Environment Block (PEB) structure."
 date:    2021-08-03 00:00:00 -0000
