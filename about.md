@@ -1,11 +1,5 @@
 ---
-layout: page
+layout: about
 title: About me
-permalink: /about/
+permalink: /about_me/
 ---
-
-Security Researcher and Cryptolaemus team member. I reverse engineer malware and track botnets.
-
-I miss Emotet. Bye.
-
-![emotet](/assets/images/emotet.png)

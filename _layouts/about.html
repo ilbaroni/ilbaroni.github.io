@@ -2,15 +2,20 @@
 layout: default
 ---
 
-<center><strong>Make sure to grab some</strong>
-<p>☕</p>
-<img id="random-panel" alt="Random Panel" width="780" />
+<center>
+Security Researcher and <a href="https://x.com/Cryptolaemus1">Cryptolaemus</a> team member.
+<br>
+I reverse engineer malware and track botnets. ☕
+<br>
+<br>
+<br>
+<img id="random-panel" alt="Random Panel" width="780"/>
 </center>
 
 <script>
 const aux = [
     {% for file in site.static_files %}
-        {% if file.path contains '/assets/panels' and file.extname == '.png' %}
+        {% if file.path contains '/assets/images/panels' and file.extname == '.png' %}
         '{{ file.path }}',
         {% endif %}
     {% endfor %}
@@ -26,6 +31,6 @@ function changeImage() {
     document.getElementById('random-panel').src = randomImagePath;
 }
 
-setInterval(changeImage, 3000);
+setInterval(changeImage, 6000);
 changeImage();
 </script>
