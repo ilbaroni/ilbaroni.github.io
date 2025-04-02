@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/ilbaroni
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://ilikebotnets.com
+  * I am ilbaroni (https://keybase.io/ilbaroni) on keybase.
+  * I have a public key ASBfF1W7HVApVmIJOPEFOAbx2wH4gkq_tMYCpviPnxp5ywo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120d3a701b84ed1935b07273939667d56be30d4a615fbd732ed69273160339f0dc90a",
+      "host": "keybase.io",
+      "kid": "01205f1755bb1d502956620938f1053806f1db01f8824abfb4c602a6f88f9f1a79cb0a",
+      "uid": "f5dc68d48325a8dbe585cc5e6917dd19",
+      "username": "ilbaroni"
+    },
+    "merkle_root": {
+      "ctime": 1743588312,
+      "hash": "c6ed63e2947294641946b31cdd4b7106c84852daf392c65c976635f53af1d5176d0074b7230034f6fcc9e9076a79bf0e4e371e8d6349ef66df29f167d2885c39",
+      "hash_meta": "161afc25f5d2bb643525bdd355b1d8a58a206cb291e492fe00ba4de12accaa2f",
+      "seqno": 26680785
+    },
+    "service": {
+      "entropy": "u37B+ukVm6KAIKnwtDzWOmTU",
+      "hostname": "ilikebotnets.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "6.5.0"
+  },
+  "ctime": 1743588336,
+  "expire_in": 504576000,
+  "prev": "63c752e081c77848368b24232bb15d303e603ad6b56a89403fbdd21d791a99e6",
+  "seqno": 31,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgXxdVux1QKVZiCTjxBTgG8dsB+IJKv7TGAqb4j58aecsKp3BheWxvYWTESpcCH8QgY8dS4IHHeEg2iyQjK7FdMD5gOta1aolAP73SHXkamebEICMZbxYbTSnlbMbihvTeY7ZhxulpI7D26NJDZdUHjt/2AgHCo3NpZ8RAFJKfQJS/2e25e2pKV4Vvu+wRAhMJCbHgcqbdmP9Z99JD9sLOklnCm1+bmtDSvMJv2ZrAWx0HWOXWjpb606JoAqhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIBzeGaJwkxq8jfgNJNy/KDdTx5aQO5VhvlTCZr6z0ba2o3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/ilbaroni
+
+==================================================================
