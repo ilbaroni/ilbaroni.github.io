@@ -15,7 +15,7 @@ I reverse engineer malware and track botnets. ☕
 <script>
 const aux = [
     {% for file in site.static_files %}
-        {% if file.path contains '/assets/images/random' and (file.extname == '.png' or file.extname == '.jpeg') %}
+        {% if file.path contains '/assets/images/random' and file.extname == '.png' %}
         '{{ file.path }}',
         {% endif %}
     {% endfor %}
