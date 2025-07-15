@@ -9,13 +9,13 @@ I reverse engineer malware and track botnets. ☕
 <br>
 <br>
 <br>
-<img id="random-panel" alt="Random Panel" width="780"/>
+<img id="random-img" alt="Random Img" width="780"/>
 </center>
 
 <script>
 const aux = [
     {% for file in site.static_files %}
-        {% if file.path contains '/assets/images/panels' and file.extname == '.png' %}
+        {% if file.path contains '/assets/images/random' and (file.extname == '.png' or file.extname == '.jpeg') %}
         '{{ file.path }}',
         {% endif %}
     {% endfor %}
