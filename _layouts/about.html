@@ -28,7 +28,7 @@ function getRandomImage() {
 
 function changeImage() {
     const randomImagePath = `${getRandomImage()}`;
-    document.getElementById('random-panel').src = randomImagePath;
+    document.getElementById('random-img').src = randomImagePath;
 }
 
 setInterval(changeImage, 6000);
