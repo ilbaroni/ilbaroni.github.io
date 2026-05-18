@@ -4,6 +4,8 @@ title: Publications
 permalink: /publications/
 ---
 
+* 2026-02-04 @ Silent Push Identifies More Than 10,000 Infected IPs as Part of SystemBC Botnet Malware Family
+    * [https://www.silentpush.com/blog/systembc](https://www.silentpush.com/blog/systembc/)
 * 2024-12-03 @ PROXY.AM Powered by Socks5Systemz Botnet
     * [https://www.bitsight.com/blog/proxyam-powered-socks5systemz-botnet](https://www.bitsight.com/blog/proxyam-powered-socks5systemz-botnet)
 * 2024-08-27 @ 7777 Botnet – Insights into a Multi-Target Botnet
